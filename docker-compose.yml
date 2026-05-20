@@ -82,7 +82,7 @@ services:
   # 5. Python Math Service
   python-service:
     build:
-      context: ./python2
+      context: ./python
       dockerfile: Dockerfile
     container_name: python_service
     environment:
