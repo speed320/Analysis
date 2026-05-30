@@ -37,3 +37,5 @@ out/
 .vscode/
 
 *.zip
+*.directory
+front/node_modules

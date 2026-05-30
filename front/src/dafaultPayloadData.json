@@ -1,0 +1,153 @@
+{
+  "payload": {
+    "names": {
+      "nameClasses": {
+        "A": "Рейтинг А",
+        "B": "Рейтинг B",
+        "V": "Рейтинг V"
+      },
+      "nameGroupA": {
+        "codeA11": "Наименование параметра A11",
+        "codeA21": "Наименование параметра A21",
+        "codeA22": "Наименование параметра A22",
+        "codeA23": "Наименование параметра A23",
+        "codeA31": "Наименование параметра A31",
+        "codeA32": "Наименование параметра A32",
+        "codeA33": "Наименование параметра A33",
+        "codeA34": "Наименование параметра A34",
+        "codeA35": "Наименование параметра A35",
+        "codeA36": "Наименование параметра A36",
+        "codeA37": "Наименование параметра A37",
+        "codePn": "Общее наименование Pn",
+        "codeDi": "Общее наименование Di"
+      },
+      "nameGroupB": {
+        "codeB11": "Наименование параметра B11",
+        "codeB12": "Наименование параметра B12",
+        "codeB13": "Наименование параметра B13",
+        "codeB21": "Наименование параметра B21",
+        "codeB22": "Наименование параметра B22",
+        "codeB23": "Наименование параметра B23",
+        "codeB24": "Наименование параметра B24",
+        "codeB25": "Наименование параметра B25",
+        "codeB26": "Наименование параметра B26",
+        "codeB31": "Наименование параметра B31",
+        "codeB32": "Наименование параметра B32",
+        "codeB33": "Наименование параметра B33",
+        "codeB34": "Наименование параметра B34",
+        "codeB41": "Наименование параметра B41",
+        "codeB42": "Наименование параметра B42",
+        "codeB43": "Наименование параметра B43",
+        "codeB44": "Наименование параметра B44",
+        "codePn": "Общее наименование Pn",
+        "codeDi": "Общее наименование Di"
+      },
+      "nameGroupV": {
+        "codeV11": "Наименование параметра V11",
+        "codeV12": "Наименование параметра V12",
+        "codeV13": "Наименование параметра V13",
+        "codeV14": "Наименование параметра V14",
+        "codeV21": "Наименование параметра V21",
+        "codeV22": "Наименование параметра V22",
+        "codeV23": "Наименование параметра V23",
+        "codeV24": "Наименование параметра V24",
+        "codeV25": "Наименование параметра V25",
+        "codeV26": "Наименование параметра V26",
+        "codeV27": "Наименование параметра V27",
+        "codeV31": "Наименование параметра V31",
+        "codeV32": "Наименование параметра V32",
+        "codeV33": "Наименование параметра V33",
+        "codeV41": "Наименование параметра V41",
+        "codeV42": "Наименование параметра V42",
+        "codeV43": "Наименование параметра V43",
+        "codeV44": "Наименование параметра V44",
+        "codePn": "Общее наименование Pn",
+        "codeDi": "Общее наименование Di"
+      }
+    },
+    "classes": [
+      {
+        "classType": "A",
+        "data": [
+          {
+            "ratingYear": null,
+            "groupData": {
+              "a11": { "type": "paramData", "prf": null, "kco": null },
+              "a21": { "type": "paramData", "zkn": null, "chva": null },
+              "a22": { "type": "paramData", "zkn": null, "chpa": null },
+              "a23": { "type": "paramData", "cz": null, "cv": null },
+              "a31": { "type": "paramData", "wl": [], "npr": [], "n": null },
+              "a32": { "type": "paramData", "dn": [], "npr": [], "n": null },
+              "a33": { "type": "paramData", "rdn": [], "npr": [], "n": null },
+              "a34": { "type": "paramData", "asp": [], "ia": [], "n": null },
+              "a35": { "type": "paramData", "od": [], "npr": [], "n": null },
+              "a36": { "type": "paramData", "aso": null, "pfn": null },
+              "a37": { "type": "paramData", "ozg": null },
+              "pn": { "type": "paramData", "pno": null, "pnv": null, "pnz": null },
+              "di": { "type": "paramData", "dio": null, "div": null, "diz": null }
+            }
+          }
+        ]
+      },
+      {
+        "classType": "B",
+        "data": [
+          {
+            "ratingYear": null,
+            "groupData": {
+              "b11": { "type": "paramData", "ena": null, "enb": null, "eb": null, "enc": null, "ec": null },
+              "b12": { "type": "paramData", "prf": null, "kco": null },
+              "b13": { "type": "paramData", "cp": null, "p": null },
+              "b21": { "type": "paramData", "countNpsHavingPao": null, "countLicenseNps": null },
+              "b22": { "type": "paramData", "nmp": null, "acp": null, "opc": null, "acc": null, "nbp": null },
+              "b23": { "type": "paramData", "pkp": null, "ppp": null, "np": null, "noa": null },
+              "b24": { "type": "paramData", "nap": null, "pn": null },
+              "b25": { "type": "paramData", "k": null, "chpsi": [], "chpi": [] },
+              "b26": { "type": "paramData", "k": null, "chosi": [], "choi": [] },
+              "b31": { "type": "paramData", "ut": null, "doCount": null },
+              "b32": { "type": "paramData", "n": null, "vo": null, "po": null, "npr": null },
+              "b33": { "type": "paramData", "cht": null, "dv": [], "ft": [], "pmt": [] },
+              "b34": { "type": "paramData", "k": null, "hp": [] },
+              "b41": { "type": "paramData", "n": null, "wl": [], "npr": [] },
+              "b42": { "type": "paramData", "n": null, "dn": [], "npr": [] },
+              "b43": { "type": "paramData", "io": null, "iv": null, "iz": null, "no": null, "nv": null, "nz": null },
+              "b44": { "type": "paramData", "n": null, "od": [], "pn": [] },
+              "pn": { "type": "paramData", "pno": null, "pnv": null, "pnz": null },
+              "di": { "type": "paramData", "dio": null, "div": null, "diz": null }
+            }
+          }
+        ]
+      },
+      {
+        "classType": "V",
+        "data": [
+          {
+            "ratingYear": null,
+            "groupData": {
+              "v11": { "type": "paramData", "zmd": null, "zm": null },
+              "v12": { "type": "paramData", "chz": null, "zpk": null },
+              "v13": { "type": "paramData", "mdp": null, "zpk": null },
+              "v14": { "type": "paramData", "prf": null, "kco": null },
+              "v21": { "type": "paramData", "countNpsHavingPoa": null, "countLicenseNps": null },
+              "v22": { "type": "paramData", "acp": null, "opc": null, "acc": null, "nmp": null },
+              "v23": { "type": "paramData", "pkp": null, "ppp": null, "np": null, "noa": null },
+              "v24": { "type": "paramData", "nap": null, "pn": null },
+              "v25": { "type": "paramData", "bp": null, "cp": null, "nmp": null },
+              "v26": { "type": "paramData", "chps": [], "chp": [], "k": null },
+              "v27": { "type": "paramData", "chosi": [], "choi": [], "k": null },
+              "v31": { "type": "paramData", "dv": [], "ft": [], "pmt": [], "cht": null },
+              "v32": { "type": "paramData", "n": null, "vo": null, "po": null, "npr": null },
+              "v33": { "type": "paramData", "hp": [], "k": null },
+              "v41": { "type": "paramData", "wl": [], "npr": [], "n": null },
+              "v42": { "type": "paramData", "dn": [], "npr": [], "n": null },
+              "v43": { "type": "paramData", "io": null, "iv": null, "iz": null, "no": null, "nv": null, "nz": null },
+              "v44": { "type": "paramData", "od": [], "pn": [], "n": null },
+              "pn": { "type": "result", "resultGroup": null },
+              "di": { "type": "result", "resultGroup": null }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
