@@ -172,7 +172,7 @@ export default {
           <span class="label">Бюджет расходов:</span>
           <span class="value">{{ Number(predictionResult.planned_costs).toLocaleString() }} ₽</span>
         </div>
-        <div class="result-item highlight">
+        <div class="result-item result-item-predict highlight">
           <span class="label">Прогноз продаж:</span>
           <span class="value">{{ Number(predictionResult.predicted_sales).toLocaleString() }} ₽</span>
         </div>
@@ -204,7 +204,8 @@ export default {
 
 .prediction-form {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  //align-items: flex-end;
   gap: 30px;
   margin-bottom: 30px;
 }
@@ -313,7 +314,9 @@ export default {
 
 .result-grid {
   display: flex;
-  gap: 40px;
+  row-gap: 20px;
+  column-gap: 40px;
+  flex-wrap: wrap;
 }
 
 .result-item {

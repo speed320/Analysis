@@ -108,13 +108,13 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/assets/constants" as *;
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: calc(100vh - 400px);
 }
 
 .login-card {
@@ -163,7 +163,7 @@ input:focus {
 .btn-submit {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $blue 0%, $blue 100%);
   color: white;
   border: none;
   border-radius: 4px;

@@ -1,7 +1,6 @@
 <script>
 import { computed, reactive, ref, watch, onMounted } from 'vue'
 import TopControls from '@/components/TopControls.vue'
-import exampleData from '@/example.json'
 import defaultData from '@/dafaultPayloadData.json'
 import ParametersForm from "@/components/ParametersForm.vue";
 import PredictionForm from "@/components/PredictionForm.vue";
@@ -267,11 +266,13 @@ export default {
 <template>
   <div class="container">
     <div class="input-parameters">
-
-      <TopControls
-          :platforms="platforms"
-          v-model:selectedPlatform="selectedPlatform"
-      />
+      <div class="input-parameters__header">
+        <span>Платформы:</span>
+        <TopControls
+            :platforms="platforms"
+            v-model:selectedPlatform="selectedPlatform"
+        />
+      </div>
 
       <div class="main-card">
         <div class="parameters-grid">
@@ -302,13 +303,27 @@ export default {
 
 <style scoped lang="scss">
 @use "@/assets/constants" as *;
+.main-card{
+  display: flex;
+  //flex-direction: column;
+  gap: 20px;
+
+}
 .parameters-grid{
   border-radius: 15px;
   background: white;
   border: 2px solid $light-gray;
   padding: 40px;
 }
-
+.input-parameters{
+  &__header{
+    display: flex;
+    gap: 20px;
+    font-size: 28px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+}
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -349,4 +364,5 @@ export default {
     opacity: 0.6;
   }
 }
+
 </style>

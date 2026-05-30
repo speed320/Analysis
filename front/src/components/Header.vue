@@ -1,17 +1,48 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-// Реактивная переменная, которая хранит наличие токена
-const isAuthenticated = ref(false);
+// 1. Инициализируем переменную сразу (чтобы при первой загрузке состояние было верным)
+const isAuthenticated = ref(!!localStorage.getItem('token'));
 
-// Проверяем токен при загрузке компонента
-onMounted(() => {
+// Функция для обновления статуса
+const updateAuthStatus = () => {
   isAuthenticated.value = !!localStorage.getItem('token');
+};
+
+// Функция, которая слушает изменения из других вкладок или компонентов
+const handleStorageChange = (event) => {
+  // Нас интересует только изменение ключа 'token'
+  if (event.key === 'token') {
+    isAuthenticated.value = !!event.newValue;
+  }
+};
+
+onMounted(() => {
+  // 2. Дополнительно проверяем при монтировании
+  updateAuthStatus();
+
+  // 3. Подписываемся на событие изменения localStorage в браузере
+  window.addEventListener('storage', handleStorageChange);
+
+  // Крошечный лайфхак для отслеживания изменений внутри этой же вкладки:
+  // Переопределяем стандартные вызовы, чтобы шапка знала о входе мгновенно
+  const originalSetItem = localStorage.setItem;
+  localStorage.setItem = function (key, value) {
+    originalSetItem.apply(this, arguments);
+    if (key === 'token') {
+      isAuthenticated.value = true;
+    }
+  };
 });
-console.log(isAuthenticated)
+
+// Не забываем очищать за собой слушатели событий
+onBeforeUnmount(() => {
+  window.removeEventListener('storage', handleStorageChange);
+});
+
 // Функция для выхода из системы
 const handleLogout = () => {
   localStorage.removeItem('token');
@@ -108,7 +139,6 @@ const handleLogout = () => {
     align-items: center;
   }
 
-  // Добавили стили для новой кнопки выхода, чтобы она выглядела аккуратно
   &__logout-btn {
     font-family: 'Inter', sans-serif;
     background: none;
@@ -120,7 +150,7 @@ const handleLogout = () => {
     padding: 0;
 
     &:hover {
-      color: $orange; /* Или opacity: 0.8 в зависимости от твоего дизайна */
+      color: $orange;
       transition: 0.2s;
     }
   }

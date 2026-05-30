@@ -41,6 +41,7 @@ export default {
 
 .class-btn {
   padding: 10px 20px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background: white;
