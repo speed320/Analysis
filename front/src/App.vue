@@ -8,14 +8,14 @@ import {useRouter} from "vue-router";
     components: {Footer, Header},
     setup(){
       const router = useRouter()
-      onMounted(()=>{
-        if(localStorage.getItem('token')){
-          router.push('/parameters')
-        }
-        else{
-          router.push('/login')
-        }
-      });
+      // onMounted(()=>{
+      //   if(localStorage.getItem('token')){
+      //     router.push('/parameters')
+      //   }
+      //   else{
+      //     router.push('/login')
+      //   }
+      // });
     }
   })
 

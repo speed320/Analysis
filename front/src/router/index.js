@@ -6,10 +6,11 @@ import App from '../App.vue'
 import Register from "@/views/Register.vue";
 import Login from "@/views/Login.vue";
 import Analyse from "@/views/Analyse.vue";
+import Landing from "@/views/Landing.vue";
 
 
 const routes = [
-    // { path: '/', component: App },
+    { path: '/', component: Landing },
     { path: '/parameters', component: InputParameters },
     { path: '/analysis', component: Analyse },
     { path: '/login', component: Login },
