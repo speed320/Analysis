@@ -1,26 +1,31 @@
 <script>
 import { ref, computed, onBeforeUnmount } from 'vue';
 
+// 1. Создаем словарь внутри скрипта компонента
+const PLATFORM_LABELS = {
+  VK: 'VK',
+  TV: 'ТВ',
+  NEWSPAPER: 'Газеты',
+  PROMOTIONAL: 'Промо материалы'
+};
+
 export default {
   props: {
     analytics: Object,
     selectedPlatform: String,
-    // Передаем карту ID платформ из родителя, чтобы узнать platformId по имени (например, VK -> 1)
     platformIdMap: {
       type: Object,
       default: () => ({ VK: 1, TV: 2, NEWSPAPER: 3, PROMOTIONAL: 4 })
     }
   },
   setup(props) {
-    // Состояние формы предсказания
     const plannedCosts = ref("10.00");
     const predictionResult = ref(null);
     const loading = ref(false);
-    const loadingStatus = ref(""); // Для отображения текста статуса (PROCESSING...)
+    const loadingStatus = ref("");
 
-    let pollInterval = null; // Хранилище для таймера
+    let pollInterval = null;
 
-    // Очистка таймера при уничтожении компонента, чтобы не было утечек памяти
     onBeforeUnmount(() => {
       clearInterval(pollInterval);
     });
@@ -33,12 +38,10 @@ export default {
       }
     };
 
-    // Основная функция запуска предсказания
     const startPrediction = async () => {
       if (loading.value) return;
 
       const currentPlatformName = props.selectedPlatform;
-      // Получаем ID платформы из мапы (если её нет в props, возьмет дефолтный ID)
       const platformId = props.platformIdMap[currentPlatformName] || 1;
 
       loading.value = true;
@@ -46,7 +49,6 @@ export default {
       predictionResult.value = null;
 
       try {
-        // Шаг 1: Создаем запрос на предсказание
         const response = await fetch('/api/marketing/predict', {
           method: 'POST',
           headers: {
@@ -66,7 +68,6 @@ export default {
 
         if (!requestId) throw new Error("Не получен requestId от сервера");
 
-        // Шаг 2: Запускаем polling (опрос раз в секунду)
         loadingStatus.value = "Расчет модели...";
 
         pollInterval = setInterval(async () => {
@@ -80,7 +81,6 @@ export default {
       }
     };
 
-    // Функция проверки статуса на бэкенде
     const checkPredictionStatus = async (requestId) => {
       try {
         const response = await fetch(`/api/results/${requestId}`, {
@@ -103,7 +103,6 @@ export default {
           clearInterval(pollInterval);
           throw new Error("Бэкенд вернул статус ошибки при расчете.");
         } else {
-          // Если PROCESSING — ничего не делаем, ждем следующую секунду
           loadingStatus.value = "Вычисления на сервере...";
         }
 
@@ -115,13 +114,15 @@ export default {
       }
     };
 
+    // 2. Обязательно возвращаем PLATFORM_LABELS, чтобы шаблон его увидел
     return {
       plannedCosts,
       predictionResult,
       loading,
       loadingStatus,
       formatDecimal,
-      startPrediction
+      startPrediction,
+      PLATFORM_LABELS
     };
   }
 }
@@ -129,7 +130,9 @@ export default {
 
 <template>
   <div class="prediction-container">
-    <h3 class="title">Прогноз объема продаж для платформы: <span class="platform-badge">{{ selectedPlatform }}</span></h3>
+    <h3 class="title">Прогноз объема продаж для платформы:
+      <span class="platform-badge">{{ PLATFORM_LABELS[selectedPlatform] || selectedPlatform }}</span>
+    </h3>
 
     <div class="prediction-form">
       <div class="input-block">
@@ -166,7 +169,7 @@ export default {
       <div class="result-grid">
         <div class="result-item">
           <span class="label">Платформа:</span>
-          <span class="value">{{ predictionResult.platform }}</span>
+          <span class="value">{{ PLATFORM_LABELS[predictionResult.platform] || predictionResult.platform }}</span>
         </div>
         <div class="result-item">
           <span class="label">Бюджет расходов:</span>

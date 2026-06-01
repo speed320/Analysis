@@ -12,13 +12,20 @@ export default {
       PredictionImage: 'src/assets/svg/prediction-icon.svg',
       visualisationImage: 'src/assets/svg/visualization-icon.svg',
     }
+  },
+  methods:{
+    handleStart(){
+      const token = localStorage.getItem('token');
+      if (token) this.$router.push('/parameters');
+      else this.$router.push('/login');
+    }
   }
 }
 </script>
 
 <template>
   <div class="container">
-    <span class="landing__title">Платформа Маркетинговой Аналитики</span>
+    <span class="landing__title">Платформа маркетингового анализа и прогнозирования продаж</span>
     <span class="landing__subtitle">Автоматический анализ зависимости рекламных затрат и обьемов продаж</span>
     <div class="landing-grid">
       <InfoCard
@@ -43,7 +50,7 @@ export default {
       />
     </div>
 
-      <a href="/login" class="landing__start-btn">Начать работу</a>
+      <a @click.prevent="handleStart" class="landing__start-btn">Начать работу</a>
 
   </div>
 

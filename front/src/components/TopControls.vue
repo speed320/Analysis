@@ -1,30 +1,40 @@
 <script>
+// Добавляем словарь прямо сюда, чтобы компонент знал, как переводить коды
+const PLATFORM_LABELS = {
+  VK: 'VK',
+  TV: 'ТВ',
+  NEWSPAPER: 'Газеты',
+  PROMOTIONAL: 'Промо материалы' // Твоя замена
+};
+
 export default {
   name: "TopControls",
   props: {
     platforms: Array,
     selectedPlatform: String,
   },
-  emits: ['update:selectedPlatform']
+  emits: ['update:selectedPlatform'],
+  setup() {
+    return { PLATFORM_LABELS }
+  }
 }
 </script>
 
 <template>
-<div class="top-controls">
-  <div class="class-selector">
-    <button
-        v-for="cls in platforms"
-        :key="cls"
-        :class="['class-btn', { active: selectedPlatform === cls}]"
-        @click="$emit('update:selectedPlatform', cls)"
-    >
-      {{ cls }}
-    </button>
+  <div class="top-controls">
+    <div class="class-selector">
+      <button
+          v-for="cls in platforms"
+          :key="cls"
+          :class="['class-btn', { active: selectedPlatform === cls}]"
+          @click="$emit('update:selectedPlatform', cls)"
+      >
+        {{ PLATFORM_LABELS[cls] || cls }}
+      </button>
+    </div>
+
+    <div class="year-selector"></div>
   </div>
-
-  <div class="year-selector"></div>
-
-</div>
 </template>
 
 <style scoped lang="scss">

@@ -29,11 +29,10 @@ export default {
   flex-direction: column;
   align-items: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer; /* Делаем курсор лапкой, чтобы показать кликабельность */
+  cursor: pointer;
 
-  /* 2. Эффект при наведении на всю карточку */
   &:hover {
-    transform: translateY(-8px); /* Приподнимаем карточку вверх на 8 пикселей */
+    transform: translateY(-8px);
   }
   &__pin{
     background: $white;

@@ -13,6 +13,12 @@ export default {
     TopControls,
   },
   setup() {
+    const PLATFORM_LABELS = {
+      VK: 'VK (ВКонтакте)',
+      TV: 'ТВ реклама',
+      NEWSPAPER: 'Печатные СМИ',
+      PROMOTIONAL: 'Промо материалы'
+    };
     class PlatformStats {
       constructor(id, month, costs, sales, isNew = false) {
         this.id = id || null;
