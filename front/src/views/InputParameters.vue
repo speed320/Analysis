@@ -325,7 +325,8 @@ export default {
   &__header{
     display: flex;
     gap: 20px;
-    font-size: 28px;
+    font-size: 24px;
+    font-weight: 600;
     align-items: center;
     margin-bottom: 20px;
   }

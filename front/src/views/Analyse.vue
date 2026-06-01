@@ -117,26 +117,43 @@ onBeforeUnmount(() => {
 const analysis = computed(() => rawData.value?.resultData?.all_data_analysis);
 
 // Форматирование данных под Диаграмму рассеяния
+// Форматирование данных под Диаграмму рассеяния
 const scatterChartData = computed(() => {
-  if (!analysis.value) return null;
-  const points = analysis.value.visualization_data.scatter_plot.map(point => ({
-    x: point[0],
-    y: point[1]
+  if (!analysis.value || !analysis.value.visualization_data.scatter_plot) return null;
+
+  // Деструктуризируем: первый массив забираем в xValues, второй в yValues
+  const [xValues, yValues] = analysis.value.visualization_data.scatter_plot;
+
+  // Собираем правильный массив точек, проходясь по массиву X
+  const points = xValues.map((x, index) => ({
+    x: x,
+    y: yValues[index]
   }));
+
   return {
     datasets: [{
       label: 'Затраты / Объемы (на одного)',
       data: points,
-      backgroundColor: '#f27b00', // Оранжевый бренд-цвет как на кнопках
+      backgroundColor: '#f27b00', // Оранжевый бренд-цвет
+      pointRadius: 6, // Немного увеличим точки для наглядности
+      pointHoverRadius: 8
     }]
   };
 });
 
+// Обязательно указываем type: 'linear', иначе Chart.js может сломать отображение
 const scatterOptions = {
   responsive: true,
   scales: {
-    x: { title: { display: true, text: 'Объемы из БД (на одного)' } },
-    y: { title: { display: true, text: 'Затраты из БД' } }
+    x: {
+      type: 'linear',
+      position: 'bottom',
+      title: { display: true, text: 'Объемы (на одного)' }
+    },
+    y: {
+      type: 'linear',
+      title: { display: true, text: 'Затраты' }
+    }
   }
 };
 
@@ -207,7 +224,7 @@ const salesChartData = computed(() => {
         <div class="charts-grid">
           <div class="chart-card large">
             <h3>Диаграмма рассеяния</h3>
-            <p class="subtitle">Тут от даты ничего не зависит</p>
+  <!--            <p class="subtitle">Тут от даты ничего не зависит</p>-->
             <ScatterChart :chartData="scatterChartData" :options="scatterOptions" />
           </div>
 

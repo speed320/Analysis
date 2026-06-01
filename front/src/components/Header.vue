@@ -21,14 +21,10 @@ const handleStorageChange = (event) => {
 };
 
 onMounted(() => {
-  // 2. Дополнительно проверяем при монтировании
   updateAuthStatus();
 
-  // 3. Подписываемся на событие изменения localStorage в браузере
   window.addEventListener('storage', handleStorageChange);
 
-  // Крошечный лайфхак для отслеживания изменений внутри этой же вкладки:
-  // Переопределяем стандартные вызовы, чтобы шапка знала о входе мгновенно
   const originalSetItem = localStorage.setItem;
   localStorage.setItem = function (key, value) {
     originalSetItem.apply(this, arguments);
@@ -38,12 +34,10 @@ onMounted(() => {
   };
 });
 
-// Не забываем очищать за собой слушатели событий
 onBeforeUnmount(() => {
   window.removeEventListener('storage', handleStorageChange);
 });
 
-// Функция для выхода из системы
 const handleLogout = () => {
   localStorage.removeItem('token');
   isAuthenticated.value = false;
@@ -56,8 +50,8 @@ const handleLogout = () => {
     <div class="container">
       <div class="header__content">
         <div class="header__logo">
-          <img src="@/assets/svg/logo_ystu.svg" alt="Лого"/>
-          <span class="header__logo-text">Рейтинг</span>
+          <img src="@/assets/svg/logo_analyse.svg" alt="Лого"/>
+          <span class="header__logo-text">Прогноз Маркет</span>
         </div>
 
         <nav class="header__nav-links">
@@ -106,9 +100,11 @@ const handleLogout = () => {
 
     &-text{
       margin-left: 30px;
-      font-size: 24px;
+      font-size: 22px;
       color: $white;
+      max-width: 100px;
     }
+
   }
 
   &__nav-links{

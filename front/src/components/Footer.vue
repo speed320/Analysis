@@ -7,14 +7,15 @@
     <div class="container">
       <div class="footer__content">
         <div class="footer__title">
-          <img src="@/assets/svg/logo_ystu_full.svg" alt="Лого"/>
+          <img src="@/assets/svg/logo_analyse.svg" alt="Лого"/>
+          <span class="footer__logo-text">Прогноз Маркет</span>
         </div>
 
-        <div class="footer__copyright">
-          <p class="footer__copyright-text">
-            © 1944-2026, ФГБОУ ВО «ЯГТУ»
-          </p>
-        </div>
+  <!--        <div class="footer__copyright">-->
+  <!--          <p class="footer__copyright-text">-->
+  <!--            © 1944-2026, ФГБОУ ВО «ЯГТУ»-->
+  <!--          </p>-->
+  <!--        </div>-->
 
         <nav class="footer__links">
           <ul class="footer__link-list">
@@ -36,6 +37,22 @@
     margin-top: auto;
     margin-bottom: 20px;
 
+  &__title{
+    display: flex;
+    align-items: center;
+  }
+  &__logo{
+    display: flex;
+    align-items: center;
+
+    &-text{
+      margin-left: 10px;
+      font-size: 22px;
+      color: $white;
+      max-width: 100px;
+    }
+
+  }
     &__content{
       background-color: $blue;
       border-radius: 30px;
