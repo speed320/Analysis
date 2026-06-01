@@ -1,13 +1,13 @@
 <script>
 import { computed, reactive, ref, watch, onMounted } from 'vue'
 import TopControls from '@/components/TopControls.vue'
-import defaultData from '@/dafaultPayloadData.json'
 import ParametersForm from "@/components/ParametersForm.vue";
 import PredictionForm from "@/components/PredictionForm.vue";
+// import defaultData from '@/dafaultPayloadData.json' // Оставил закомментированным, если нужно
 
 export default {
   name: "InputParameters",
-  components:{
+  components: {
     PredictionForm,
     ParametersForm,
     TopControls,
@@ -19,6 +19,7 @@ export default {
       NEWSPAPER: 'Печатные СМИ',
       PROMOTIONAL: 'Промо материалы'
     };
+
     class PlatformStats {
       constructor(id, month, costs, sales, isNew = false) {
         this.id = id || null;
@@ -44,6 +45,7 @@ export default {
           this.data[platform] = [];
         });
       }
+
       addStats(platform, id, month, costs, sales, isNew = false) {
         if (this.data[platform]) {
           this.data[platform].push(
@@ -102,6 +104,9 @@ export default {
     const platformNameMap = reactive({});
     const analytics = reactive(new PlatformsAnalytics());
 
+    // Состояние загрузки для предотвращения двойных кликов
+    const isSaving = ref(false);
+
     const fetchPlatforms = async () => {
       try {
         const platfornResponse = await fetch('/api/marketing/platforms');
@@ -148,21 +153,13 @@ export default {
         Object.assign(platformIdMap, fallback);
         Object.assign(platformNameMap, { 1: "VK", 2: "TV", 3: "NEWSPAPER", 4: "PROMOTIONAL" });
         analytics.clearData();
-        analytics.loadJSON(exampleData);
+        // Вставьте здесь fallback данные, если нужно
       }
     };
 
     onMounted(() => {
       fetchPlatforms();
     });
-
-    watch(
-        analytics,
-        (newValue) => {
-          console.log('analytics changed:', newValue)
-        },
-        { deep: true }
-    );
 
     const platforms = analytics.getPlatforms();
     const selectedPlatform = ref(platforms[0]);
@@ -176,33 +173,50 @@ export default {
       return count;
     });
 
-    // ОБНОВЛЕННЫЙ МЕТОД СОХРАНЕНИЯ
+    // ГЛОБАЛЬНАЯ ВАЛИДАЦИЯ: Проверяем, есть ли ошибки во ВСЕХ вкладках
+    const hasGlobalValidationErrors = computed(() => {
+      for (const platform of platforms) {
+        const platformData = analytics.data[platform] || [];
+
+        // Проверка дублей месяцев
+        const months = platformData.map(i => i.month);
+        const uniqueMonths = new Set(months);
+        if (months.length !== uniqueMonths.size) return true;
+
+        // Проверка корректности чисел
+        for (const item of platformData) {
+          const c = Number(String(item.costs).replace(',', '.'));
+          const s = Number(String(item.sales).replace(',', '.'));
+          if (isNaN(c) || c < 0 || String(item.costs).trim() === '') return true;
+          if (isNaN(s) || s < 0 || String(item.sales).trim() === '') return true;
+        }
+      }
+      return false;
+    });
+
     const saveAllChanges = async () => {
-      if (totalChangedCount.value === 0) {
-        console.log('Нет изменённых строк для сохранения');
+      if (totalChangedCount.value === 0 || hasGlobalValidationErrors.value) {
         return;
       }
 
+      isSaving.value = true;
       const payload = [];
       const serverRowsToDelete = [];
 
-      // 1. Собираем информацию об измененных строках
       platforms.forEach(platform => {
         const platformData = analytics.data[platform] || [];
         const changedRows = platformData.filter(item => item.changed);
 
         changedRows.forEach(item => {
-          // Если у строки есть ID, отправляем её в список на удаление
           if (item.id) {
             serverRowsToDelete.push(item.id);
           }
 
-          // В любом случае подготавливаем новые данные для POST-запроса
           payload.push({
             platformId: platformIdMap[platform] || 0,
             reportingMonth: item.month,
-            costs: Number(item.costs) || 0,
-            salesVolume: Number(item.sales) || 0
+            costs: Number(String(item.costs).replace(',', '.')) || 0,
+            salesVolume: Number(String(item.sales).replace(',', '.')) || 0
           });
         });
       });
@@ -210,11 +224,8 @@ export default {
       try {
         const token = localStorage.getItem('token');
 
-        // 2. СНАЧАЛА УДАЛЯЕМ СТАРЫЕ ЗАПИСИ С СЕРВЕРА
         if (serverRowsToDelete.length > 0) {
-          console.log(`Удаление устаревших строк с сервера перед перезаписью. Количество: ${serverRowsToDelete.length}`);
-
-          // Выполняем параллельное удаление всех старых версий строк
+          console.log(`Удаление устаревших строк: ${serverRowsToDelete.length}`);
           const deletePromises = serverRowsToDelete.map(id =>
               fetch(`/api/marketing/all/data/${id}`, {
                 method: 'DELETE',
@@ -226,12 +237,9 @@ export default {
                 if (!res.ok) throw new Error(`Не удалось удалить строку с ID ${id}`);
               })
           );
-
           await Promise.all(deletePromises);
-          console.log('Все перезаписываемые строки успешно удалены с сервера.');
         }
 
-        // 3. ДОБАВЛЯЕМ ОБНОВЛЕННЫЕ СТРОКИ КАК НОВЫЕ
         const response = await fetch('/api/marketing/data', {
           method: 'POST',
           headers: {
@@ -245,15 +253,14 @@ export default {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        console.log('Новые модифицированные данные успешно сохранены на сервере');
         alert('Данные успешно сохранены!');
-
-        // Перезапрашиваем актуальное состояние с сервера (новые ID и сброс changed флагов)
         await fetchPlatforms();
 
       } catch (error) {
         console.error('Ошибка в процессе перезаписи данных:', error);
-        alert('Не удалось корректно обновить данные на сервере. Пожалуйста, обновите страницу.');
+        alert('Не удалось корректно обновить данные на сервере.');
+      } finally {
+        isSaving.value = false;
       }
     };
 
@@ -262,6 +269,8 @@ export default {
       platforms,
       selectedPlatform,
       totalChangedCount,
+      hasGlobalValidationErrors,
+      isSaving,
       saveAllChanges,
       platformIdMap,
     }
@@ -287,14 +296,24 @@ export default {
               :selectedPlatform="selectedPlatform"
           />
           <div class="footer">
-            <span v-if="totalChangedCount > 0" class="changed-count">
-              Изменено: {{ totalChangedCount }}
+            <span v-if="hasGlobalValidationErrors" class="error-count">
+              Исправьте ошибки перед сохранением
             </span>
-            <button class="btn-submit" @click="saveAllChanges" :disabled="totalChangedCount === 0">
-              {{ totalChangedCount > 0 ? 'Сохранить' : 'Нет изменений' }}
+            <span v-else-if="totalChangedCount > 0" class="changed-count">
+              Изменено строк: {{ totalChangedCount }}
+            </span>
+
+            <button
+                class="btn-submit"
+                @click="saveAllChanges"
+                :disabled="totalChangedCount === 0 || hasGlobalValidationErrors || isSaving"
+            >
+              <template v-if="isSaving">Сохранение...</template>
+              <template v-else>{{ totalChangedCount > 0 ? 'Сохранить' : 'Нет изменений' }}</template>
             </button>
           </div>
         </div>
+
         <div class="parameters-grid">
           <PredictionForm
               :analytics="analytics"
@@ -302,27 +321,26 @@ export default {
           />
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 @use "@/assets/constants" as *;
-.main-card{
-  display: flex;
-  //flex-direction: column;
-  gap: 20px;
 
+.main-card {
+  display: flex;
+  gap: 20px;
 }
-.parameters-grid{
+.parameters-grid {
   border-radius: 15px;
   background: white;
   border: 2px solid $light-gray;
   padding: 40px;
+  width: 100%;
 }
-.input-parameters{
-  &__header{
+.input-parameters {
+  &__header {
     display: flex;
     gap: 20px;
     font-size: 24px;
@@ -336,13 +354,18 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-top: 40px;
-  padding-right: 40px;
   gap: 20px;
 }
 
 .changed-count {
   font-size: 14px;
   color: #ffa940;
+  font-weight: 500;
+}
+
+.error-count {
+  font-size: 14px;
+  color: #ff4d4f;
   font-weight: 500;
 }
 
@@ -355,7 +378,7 @@ export default {
   font-size: 18px;
   font-weight: 500;
   cursor: pointer;
-  transition: transform 0.1s, background 0.2s;
+  transition: transform 0.1s, background 0.2s, opacity 0.2s;
 
   &:hover:not(:disabled) {
     background: #e67500;
@@ -371,5 +394,4 @@ export default {
     opacity: 0.6;
   }
 }
-
 </style>
