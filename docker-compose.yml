@@ -93,6 +93,19 @@ services:
       - rabbitmq
       - db
 
+  # 6. Frontend Service
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: frontend_service
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-service
+      - input-service
+      - output-service
+
 volumes:
   postgres_data:
   rabbit_data:
